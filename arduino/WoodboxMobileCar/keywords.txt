@@ -7,6 +7,8 @@ setMotorSpeeds	KEYWORD2
 setMotor1Brake	KEYWORD2
 setMotor2Brake	KEYWORD2
 setMotorBrakes	KEYWORD2
+setMoveDistance	KEYWORD2
+setTurnRadius	KEYWORD2
 setTurnAngle	KEYWORD2
 getMotor1State	KEYWORD2
 getMotor2State	KEYWORD2

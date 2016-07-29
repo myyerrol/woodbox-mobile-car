@@ -1,3 +1,47 @@
+/***********************************************************************
+ *  Software License Agreement (BSD License)
+ *
+ *  Copyright (c) 2016, myyerrol
+ *  All rights reserved.
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions
+ *  are met:
+ *
+ *  * Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *  * Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
+ *
+ *  * Neither the name of the myyerrol nor the names of its contributors
+ *    may be used to endorse or promote products derived from this
+ *    software without specific prior written permission.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ *  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ *  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ *  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ *  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ *  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ *  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ *  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ *  POSSIBILITY OF SUCH DAMAGE.
+ ***********************************************************************
+
+ ***********************************************************************
+ *  History:
+ *  <Authors>        <Date>        <Operation>
+ *  myyerrol         2016.7.29     Create this file
+ *
+ *  Description:
+ *  This .cpp file implements woodbox mobile car class.
+ **********************************************************************/
+
 #include "woodbox_mobile_car.h"
 
 WoodboxMobileCar::WoodboxMobileCar(void)
@@ -49,6 +93,9 @@ void WoodboxMobileCar::initializePin(void)
     pinMode(pin_echo_, INPUT);
 
 #if defined(__AVR_ATmega168__) || defined(__AVR_ATmega328P__) || defined(__AVR_ATmega32U4__)
+    // Timer 1 configuration.
+    // PWM frequency calculation.
+    // 16MHz / 1 (Prescaler) / 2 (Phase-correct) / 400 (Top) = 20kHz.
     TCCR1A = 0b10100000;
     TCCR1B = 0b00010001;
     ICR1 = 400;
@@ -70,6 +117,7 @@ void WoodboxMobileCar::setMotor1Speed(int speed)
 #if defined(__AVR_ATmega168__) || defined(__AVR_ATmega328P__) || defined(__AVR_ATmega32U4__)
     OCR1A = speed;
 #else
+    // Using analogWrite function, mapping 400 to 255.
     analogWrite(motor1_pwm_, speed * 51 / 80);
 #endif
 
@@ -102,6 +150,7 @@ void WoodboxMobileCar::setMotor2Speed(int speed)
 #if defined(__AVR_ATmega168__) || defined(__AVR_ATmega328P__) || defined(__AVR_ATmega32U4__)
     OCR1A = speed;
 #else
+    // Using analogWrite function, mapping 400 to 255.
     analogWrite(motor2_pwm_, speed * 51 / 80);
 #endif
 
@@ -140,6 +189,7 @@ void WoodboxMobileCar::setMotor1Brake(int brake)
 #if defined(__AVR_ATmega168__) || defined(__AVR_ATmega328P__) || defined(__AVR_ATmega32U4__)
     OCR1A = brake;
 #else
+    // Using analogWrite function, mapping 400 to 255.
     analogWrite(motor1_pwm_, brake * 51 / 80);
 #endif
 }
@@ -159,6 +209,7 @@ void WoodboxMobileCar::setMotor2Brake(int brake)
 #if defined(__AVR_ATmega168__) || defined(__AVR_ATmega328P__) || defined(__AVR_ATmega32U4__)
     OCR1A = brake;
 #else
+    // Using analogWrite function, mapping 400 to 255.
     analogWrite(motor2_pwm_, brake * 51 / 80);
 #endif
 }
@@ -169,40 +220,86 @@ void WoodboxMobileCar::setMotorBrakes(int motor1_brake, int motor2_brake)
     setMotor2Brake(motor2_brake);
 }
 
+void WoodboxMobileCar::setMoveDistance(int motor1_speed, int motor2_speed,
+                                       float distance)
+{
+    float delay_time = 0.0;
+    setMotorSpeeds(motor1_speed, motor2_speed);
+
+    if ((motor1_speed == -motor2_speed) || distance == 0.0) {
+        return ;
+    }
+    else {
+        // Calculate delay time according to the distance.
+        delay_time = (120.0 * distance) / (PI * WHEEL_DIAMETER *
+            (motor1_speed + motor2_speed));
+        delay(delay_time * 1000);
+    }
+}
+
+void WoodboxMobileCar::setTurnRadius(int motor_speed,
+                                     int &motor1_speed,
+                                     int &motor2_speed,
+                                     int direction,
+                                     float radius)
+{
+    float radius_scale = 0.0;
+    // Calculate the ratio coefficient of two wheel speeds.
+    radius_scale = (2 * radius - WHEEL_SPACING) / (2 * radius + WHEEL_SPACING);
+
+    if (radius == 0.0) {
+        motor1_speed = motor_speed;
+        motor2_speed = motor_speed;
+        return;
+    }
+    // Right wheel speed greater than left.
+    if (direction == DIRECTION_LEFT) {
+        motor2_speed = motor_speed;
+        motor1_speed = motor_speed * radius_scale;
+    }
+    // Left wheel speed greater than right.
+    else if (direction == DIRECTION_RIGHT) {
+        motor1_speed = motor_speed;
+        motor2_speed = motor_speed * radius_scale;
+    }
+}
+
 void WoodboxMobileCar::setTurnAngle(int motor1_speed, int motor2_speed,
                                     float angle)
 {
     float delay_time = 0.0;
+    setMotorSpeeds(motor1_speed, motor2_speed);
 
-    if (motor1_speed == motor2_speed) {
-        setMotorSpeeds(motor1_speed, motor2_speed);
+    if ((motor1_speed == motor2_speed) || angle == 0.0) {
+        return ;
     }
     else {
+        // Calculate delay time according to turn angle.
         delay_time = abs((angle * WHEEL_SPACING) / (3.0 * WHEEL_DIAMETER *
-        (motor2_speed - motor1_speed)));
-        delay(delay_time);
+            (motor2_speed - motor1_speed)));
+        delay(delay_time * 1000);
     }
 }
 
 uint8_t WoodboxMobileCar::getMotor1State(void)
 {
     return !digitalRead(motor1_state_);
-
 }
 
 uint8_t WoodboxMobileCar::getMotor2State(void)
 {
     return !digitalRead(motor2_state_);
-
 }
 
 uint32_t WoodboxMobileCar::getMotor1CurrentMilliamps(void)
 {
+    // 5V / 1024 ADC counts / 144 mV per A = 34 mA per count.
     return analogRead(motor1_cs_) * 34;
 }
 
 uint32_t WoodboxMobileCar::getMotor2CurrentMilliamps(void)
 {
+    // 5V / 1024 ADC counts / 144 mV per A = 34 mA per count.
     return analogRead(motor2_cs_) * 34;
 }
 
