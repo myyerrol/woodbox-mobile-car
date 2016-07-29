@@ -1,0 +1,15 @@
+WoodboxMobileCar	KEYWORD1
+
+initializePin
+setMotor1Speed	KEYWORD2
+setMotor2Speed	KEYWORD2
+setMotorSpeeds	KEYWORD2
+setMotor1Brake	KEYWORD2
+setMotor2Brake	KEYWORD2
+setMotorBrakes	KEYWORD2
+setTurnAngle	KEYWORD2
+getMotor1State	KEYWORD2
+getMotor2State	KEYWORD2
+getMotor1CurrentMilliamps	KEYWORD2
+getMotor2CurrentMilliamps	KEYWORD2
+getDistance	KEYWORD2
