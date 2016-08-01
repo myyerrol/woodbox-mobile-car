@@ -34,3 +34,6 @@
 
 # Cmake
 *.user
+
+# Build
+build/
