@@ -60,7 +60,7 @@ FaceCapture::~FaceCapture(void)
 
 void FaceCapture::takePicture(cv::Mat image, int index)
 {
-    cv::Mat image_grey;
+    cv::Mat image_gray;
     cv::Mat image_goal(cvRound(IMAGE_HEIGHT), cvRound(IMAGE_WIDTH), CV_8UC1);
     std::stringstream temp;
     std::string name_index;
@@ -69,10 +69,10 @@ void FaceCapture::takePicture(cv::Mat image, int index)
     temp >> name_index;
     std::string name_image = name_index + ".bmp";
 
-    // Convert to grey image.
-    cv::cvtColor(image, image_grey, CV_BGR2GRAY);
-    // Convert grey image to default size.
-    cv::resize(image_grey, image_goal, image_goal.size(), 0, 0,
+    // Convert to gray image.
+    cv::cvtColor(image, image_gray, CV_BGR2GRAY);
+    // Convert gray image to default size.
+    cv::resize(image_gray, image_goal, image_goal.size(), 0, 0,
                cv::INTER_LINEAR);
     // Save image.
     cv::imwrite(name_image, image_goal);
