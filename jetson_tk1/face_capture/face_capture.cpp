@@ -113,7 +113,7 @@ int main(int argc, char **argv)
 
     if(!capture) {
         std::cerr << "Camera doesn't work!" << std::endl;
-        std::exit(0);
+        exit(1);
     }
     else {
         std::cout << "In capture..." << std::endl;
