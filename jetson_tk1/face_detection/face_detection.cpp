@@ -168,23 +168,27 @@ void FaceDetection::detectAndDraw(cv::Mat image,
 
 void FaceDetection::getUseHelp(void)
 {
-    std::cout << std::endl <<
-        "This program demonstrates the cascade recognizer. Now you can use " <<
-        "Haar or LBP features.\n"
-        "This classifier can recognize many kinds of rigid objects, once " <<
-        "the appropriate classifier is trained.\n"
-        "It's most known use is for faces.\n"
-        "Usage:\n"
-        "./face_detection\n" <<
-        "[--cascade=<cascade_path> this is the primary trained classifier " <<
-        "such as frontal face]\n"
-        "[--nested-cascade[=nested_cascade_path this an optional secondary " <<
-        "classifier such as eyes]]\n"
-        "[--scale=<image scale greater or equal to 1, try 1.3 for example>]\n"
-        "[--try-flip]\n"
-        "[filename|camera_index]\n\n"
-        "During execution:\n\tHit any key to quit.\n"
-        "\tUsing OpenCV version " << CV_VERSION << "\n" << std::endl;
+    std::cout << std::endl
+              << "This program demonstrates the cascade recognizer. Now you "
+              << "can use Haar or LBP features.\n"
+              << "This classifier can recognize many kinds of rigid objects, "
+              << "once the appropriate classifier is trained.\n"
+              << "It's most known use is for faces.\n"
+              << "Usage:\n"
+              << "./face_detection\n"
+              << "[--cascade=<cascade_path> this is the primary trained "
+              << "classifier such as frontal face]\n"
+              << "[--nested-cascade[=nested_cascade_path this an optional "
+              << "secondary classifier such as eyes]]\n"
+              << "[--scale=<image scale greater or equal to 1, try 1.3 for "
+              << "example>]\n"
+              << "[--try-flip]\n"
+              << "[filename|camera_index]\n\n"
+              << "During execution:\n\tHit any key to quit.\n"
+              << "\tUsing OpenCV version "
+              << CV_VERSION
+              << std::endl
+              << std::endl;
 }
 
 int main(int argc, char **argv)
