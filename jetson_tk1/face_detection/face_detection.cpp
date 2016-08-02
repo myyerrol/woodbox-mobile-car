@@ -48,7 +48,6 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <iterator>
 #include "face_detection.h"
 
 std::string g_name_cascade = "../data/haarcascades/haarcascade_frontalface_alt.xml";
