@@ -53,7 +53,8 @@
 
 std::string g_name_cascade = "../face_detection/data/haarcascades/haarcascade_frontalface_alt.xml";
 std::string g_name_nested_cascade = "../face_detection/data/haarcascades/haarcascade_eye_tree_eyeglasses.xml";
-std::string g_save_model_path = "/home/ubuntu/Desktop/woodbox_mobile_car/jetson_tk1/face_recognition/face_recognition_model.txt";
+std::string g_save_model_path = "face_recognition_model.txt";
+
 cv::Ptr<cv::FaceRecognizer> g_model;
 FaceRecognition g_face_recognition;
 
@@ -150,7 +151,7 @@ void FaceRecognition::detectAndDraw(cv::Mat image,
         int predicted_label = g_model->predict(image_result);
 
         std::cout << "*************************" << std::endl
-                  << " The predicted label: "    << predicted_label
+                  << "The predicted label: "     << predicted_label
                   << std::endl
                   << "*************************"
                   << std::endl;

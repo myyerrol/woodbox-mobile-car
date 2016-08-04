@@ -61,7 +61,7 @@ void FaceTrain::readCSVFile(std::string &file_name,
                             std::vector<cv::Mat> &images,
                             std::vector<int> &labels,
                             std::map<int, std::string> &labels_info,
-                            char separator)
+                            char separator = ';')
 {
     std::ifstream file_csv(file_name.c_str());
 
@@ -95,9 +95,9 @@ void FaceTrain::readCSVFile(std::string &file_name,
             for (; f != files.end(); ++f) {
                 std::cout << "\t" << *f << std::endl;
                 cv::Mat image = cv::imread(*f, CV_LOAD_IMAGE_GRAYSCALE);
-                int width  = -1;
-                int height = -1;
-                bool warning = true;
+                static int width  = -1;
+                static int height = -1;
+                static bool warning = true;
                 if (width > 0 && height > 0 &&
                    (width != image.cols || height != image.rows)) {
                     std::cout << "Images should be of the same size!"
@@ -175,7 +175,7 @@ int main(int argc, char **argv)
 
     // The following lines create an Eigenfaces model for face recognition and
     // train it with the images and labels read from the given csv file.
-    cv::Ptr<cv::FaceRecognizer> model = cv::createEigenFaceRecognizer();
+    cv::Ptr<cv::FaceRecognizer> model = cv::createLBPHFaceRecognizer();
     model->setLabelsInfo(labels_info);
     model->train(images, labels);
     std::string save_model_path = "face_recognition_model.txt";

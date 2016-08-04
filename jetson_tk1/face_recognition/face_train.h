@@ -64,7 +64,7 @@ public:
                      std::vector<cv::Mat> &images,
                      std::vector<int> &labels,
                      std::map<int, std::string> &labels_info,
-                     char separator = ';');
+                     char separator);
     void getUseHelp(char *argv);
 };
 

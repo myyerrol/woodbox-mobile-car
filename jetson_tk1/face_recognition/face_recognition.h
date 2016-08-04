@@ -46,6 +46,7 @@
 #ifndef FACE_RECOGNITION_H
 #define FACE_RECOGNITION_H
 
+#include <opencv2/opencv.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/objdetect/objdetect.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -59,9 +60,9 @@
 class FaceRecognition
 {
 public:
-	FaceRecognition(void);
-	~FaceRecognition(void);
-	void detectAndDraw(cv::Mat image,
+    FaceRecognition(void);
+    ~FaceRecognition(void);
+    void detectAndDraw(cv::Mat image,
                        cv::CascadeClassifier &cascade,
                        cv::CascadeClassifier &nested_cascade,
                        double scale,
@@ -69,7 +70,7 @@ public:
     void getUseHelp(void);
     bool writeCharToSerial(char ch);
 private:
-	int serial_id_;
+    int serial_id_;
 };
 
 #endif // FACE_RECOGNITION_H

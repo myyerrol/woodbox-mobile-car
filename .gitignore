@@ -37,5 +37,6 @@
 
 # Build
 build/
-face_train
-face_recognition
+
+# OpenCV Model
+face_recognition_model.txt

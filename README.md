@@ -70,11 +70,11 @@ $> ./face_detection
 ```
 
 3、**face_recognition:**<br>
-Before building, please replace the global veriable `g_save_model_path` to your absolute path to `face_recognition_model.txt`.
+Before building, please replace the paths of **face_train.txt** to yours!
 ```bash
 $> cd woodbox_mobile_car/jetson_tk1/face_recognition
 $> make all
-$> ./face_train
+$> ./face_train face_train.txt
 $> ./face_recognition
 ```
 
