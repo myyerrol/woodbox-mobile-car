@@ -1,6 +1,6 @@
 WoodboxMobileCar	KEYWORD1
 
-initializePin
+initializePin	KEYWORD2
 setMotor1Speed	KEYWORD2
 setMotor2Speed	KEYWORD2
 setMotorSpeeds	KEYWORD2
